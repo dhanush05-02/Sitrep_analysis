@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/change.py",
+      "src": "change.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/change.py"
+      "dest": "change.py"
     }
   ]
 }
