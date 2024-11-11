@@ -2,15 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/query.py",
-      "use": "@vercel/python",
-      "config": { "runtime": "python3.9" }
+      "src": "api/change.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/query.py"
+      "dest": "api/change.py"
     }
   ]
 }
