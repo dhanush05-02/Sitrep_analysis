@@ -247,17 +247,5 @@ def analyze_security_query():
             'error': str(e)
         }), 500
 
-from flask import Flask, Response
-
-app = Flask(__name__)
-
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def handler(path):
-    try:
-        return "Your application is running!"
-    except Exception as e:
-        return str(e), 500
-
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8080)))
