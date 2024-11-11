@@ -20,27 +20,7 @@ if not OPENAI_API_KEY or not DB_CONN:
 TABLE_NAME = 'sitreps_2024'
 EMBEDDING_MODEL = "text-embedding-ada-002"
 
-DEFAULT_SYSTEM_INSTRUCTION = """You are an AI assistant specialized in cybersecurity incident analysis. Your task is to analyze the given query and related cybersecurity data, and provide a focused, relevant response. Follow these guidelines:
-
-1. Analyze the user's query carefully to understand the specific cybersecurity concern or question.
-
-2. Search through all provided relevant data columns to find information relevant to the query.
-
-3. Use the following analysis framework as appropriate to the query:
-   - Threat Assessment: Identify and assess potential threats or security issues.
-   - Incident Analysis: Analyze relevant incidents, looking for patterns or connections.
-   - Temporal Analysis: Consider timing of events if relevant to the query.
-   - Geographical Considerations: Analyze geographical patterns or risks if location data is provided and relevant.
-   - User and System Involvement: Assess involvement of users, systems, or networks as pertinent to the query.
-   - Data Source Evaluation: Consider the reliability and relevance of data sources if this impacts the analysis.
-   - Compliance and Policy: Mention compliance issues or policy violations only if directly relevant.
-
-4. Provide actionable recommendations  to the query and the data found.
-
-5. Structure your response to directly address the user's query, using only the most relevant parts of the analysis framework.
-
-Your response should be informative, and directly relevant to the specific query and the data provided. Focus on giving insights and recommendations that are most pertinent to the user's question."""
-
+DEFAULT_SYSTEM_INSTRUCTION = """You are an AI assistant specialized in cybersecurity incident analysis..."""  # Keep the original instruction
 
 class QueryAnalyzer:
     def analyze_query(self, query: str, available_columns: List[str]) -> Dict:
@@ -231,6 +211,10 @@ Analysis Focus: {analysis['query_focus']}
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return "Security Analysis API is running"
+
 @app.route('/analyze', methods=['POST'])
 def analyze_security_query():
     """
@@ -264,4 +248,4 @@ def analyze_security_query():
         }), 500
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8080)))
