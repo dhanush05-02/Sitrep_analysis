@@ -205,17 +205,16 @@ def process_query(query: str, table_name: str) -> Tuple[List[Dict], Dict]:
     finally:
         querier.close_connection()
 
-@app.route('/', methods=['GET'])
+# Add a root route handler
+@app.route('/')
 def home():
     return jsonify({
-        "message": "Welcome to the Cybersecurity Query System API",
+        "message": "API is running",
         "endpoints": {
-            "/query": "POST - Submit a cybersecurity query",
-        },
-        "example_query": {
-            "query": "Show me recent high-severity security incidents"
+            "/api/query": "POST - Submit a cybersecurity query"
         }
     })
+
 
 
 @app.route('/api/query', methods=['POST'])
