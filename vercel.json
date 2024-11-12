@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "change.py",
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": ["templates/**"],
+        "runtime": "python3.9"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "change.py"
+    }
+  ]
+}
