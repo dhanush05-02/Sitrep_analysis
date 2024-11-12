@@ -6,7 +6,8 @@
       "use": "@vercel/python",
       "config": {
         "includeFiles": ["templates/**"],
-        "runtime": "python3.9"
+        "runtime": "python3.9",
+        "maxDuration": 100
       }
     }
   ],
