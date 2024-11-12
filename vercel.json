@@ -7,7 +7,7 @@
       "config": {
         "includeFiles": ["templates/**"],
         "runtime": "python3.9",
-        "maxDuration": 100
+        "maxDuration": 60
       }
     }
   ],
