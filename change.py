@@ -7,6 +7,8 @@ import os
 from flask import Flask, request, jsonify, render_template
 from dotenv import load_dotenv
 from flask_cors import CORS
+from langsmith.wrappers import wrap_openai
+from langsmith import traceable
 
 # Load environment variables from .env file
 load_dotenv()
@@ -14,6 +16,10 @@ load_dotenv()
 # Configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 DB_CONN = os.getenv("DATABASE_URL")
+LANGCHAIN_TRACING_V2="true"
+LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
+LANGCHAIN_API_KEY=os.getenv("LANGCHAIN_API_KEY")
+LANGCHAIN_PROJECT="Sitrep-Analysis-bot"
 
 if not OPENAI_API_KEY or not DB_CONN:
     raise ValueError("Missing required environment variables. Please check your .env file.")
@@ -42,8 +48,11 @@ DEFAULT_SYSTEM_INSTRUCTION = """You are an AI assistant specialized in cybersecu
 
 Your response should be informative, and directly relevant to the specific query and the data provided. Focus on giving insights and recommendations that are most pertinent to the user's question."""
 
+# Wrap the OpenAI client with LangSmith tracing
+client = wrap_openai(OpenAI(api_key=OPENAI_API_KEY))
 
 class QueryAnalyzer:
+    @traceable
     def analyze_query(self, query: str, available_columns: List[str]) -> Dict:
         """Analyze the user query to determine relevant columns and query intention"""
         try:
@@ -70,7 +79,7 @@ Format the response as a JSON object with these exact keys:
     "filter_criteria": []
 }}
 """
-            client = OpenAI(api_key=OPENAI_API_KEY)
+            # Remove client creation since we're using the global traced client
             response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
@@ -160,10 +169,11 @@ class DatabaseQuerier:
             print(f"Error searching records: {str(e)}")
             return []
 
+@traceable
 def get_embedding(text: str) -> List[float]:
     """Get embedding for text using OpenAI's embedding model"""
     try:
-        client = OpenAI(api_key=OPENAI_API_KEY)
+        # Remove client creation
         response = client.embeddings.create(
             model=EMBEDDING_MODEL,
             input=text
@@ -173,10 +183,11 @@ def get_embedding(text: str) -> List[float]:
         print(f"Error getting embedding: {str(e)}")
         return []
 
+@traceable
 def get_llm_response(query: str, formatted_data: str) -> str:
     """Get response from OpenAI based on the query and formatted data"""
     try:
-        client = OpenAI(api_key=OPENAI_API_KEY)
+        # Remove client creation
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
