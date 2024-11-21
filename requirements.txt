@@ -6,3 +6,5 @@ python-dotenv==1.0.0
 numpy>=1.26.0
 setuptools==68.2.2
 wheel==0.41.2
+langsmith
+
